@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.dao.IZipCodeDAO">
+	<sql id="searchFrag">
+		<where>
+		 	<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.searchWord)">
+		 	 	dong like '%' || #{searchVO.searchWord} || '%' 
+			 	 OR SIDO like '%' || #{searchVO.searchWord} || '%' 
+			 	 OR gugun like '%' || #{searchVO.searchWord} || '%' 
+			 	 OR ri like '%' || #{searchVO.searchWord} || '%' 
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectTotalCount" parameterType="PagingVO" resultType="int">
+		SELECT COUNT(*)
+		FROM ZIPTB
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectByZipcode" parameterType="PagingVO" resultType="kr.or.ddit.vo.ZipVO">
+		 	SELECT A.*
+		 	FROM (
+		 	SELECT ROWNUM RNUM, ZIPCODE, SIDO, GUGUN, DONG, RI, BUNJI     				
+		FROM ziptb
+			<include refid="searchFrag" />
+			) A
+			<![CDATA[
+				WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+			]]> 
+	</select>
+</mapper>
