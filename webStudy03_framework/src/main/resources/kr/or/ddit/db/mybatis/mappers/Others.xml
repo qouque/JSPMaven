@@ -9,7 +9,8 @@
 	
 	</select>
 	
-	<select id="selectBuyerList" resultType="BuyerVO">
+	
+	<select id="selectBuyerList" parameterType="string" resultType="BuyerVO">
 		SELECT
 		    BUYER_ID,    BUYER_NAME,    BUYER_LGU,    BUYER_BANK,
 		    BUYER_BANKNO,    BUYER_BANKNAME,    BUYER_ZIP,    BUYER_ADD1,
@@ -17,7 +18,9 @@
 		    BUYER_CHARGER,    BUYER_TELEXT
 		FROM
 		    BUYER
-	
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(buyer_lgu)">
+		WHERE BUYER_LGU LIKE '%' || #{buyer_lgu} || '%'
+		</if>
 	</select>
 	
 	

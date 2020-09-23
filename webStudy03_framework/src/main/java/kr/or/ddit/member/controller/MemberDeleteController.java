@@ -11,25 +11,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.core.tools.picocli.CommandLine.Command;
+
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.HttpMethod;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParameter;
 import kr.or.ddit.validate.CommonValidator;
 import kr.or.ddit.validate.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/leaveApp.do")
-public class MemberDeleteController extends HttpServlet {
+@CommandHandler
+public class MemberDeleteController  {
 	
 	IMemberService service = MemberServiceImpl.getInstance();
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping(value="/leaveApp.do", method=HttpMethod.POST)
+	public String doPost(
+			@RequestParameter(name="leavePass", required=true) String leavePass,
+			 HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
 		System.out.println("MemberDeleteController -post통과용");
 		HttpSession session = req.getSession(false);
 		
 //		String leaveId = req.getParameter("leaveId");
-		String leavePass = req.getParameter("leavePass");
+//		String leavePass = req.getParameter("leavePass"); //
 //		System.out.println("id : " + leaveId + ", pass : " + leavePass);
 		MemberVO member = (MemberVO) session.getAttribute("authMember");
 		Map<String, StringBuffer> errors = new LinkedHashMap<>();
@@ -43,7 +52,6 @@ public class MemberDeleteController extends HttpServlet {
 		
 		String goPage = null;
 		String message = null;
-		boolean redirect = false;
 		System.out.println(valid);
 		if(valid) {
 			ServiceResult result = service.removeMember(member);
@@ -60,34 +68,23 @@ public class MemberDeleteController extends HttpServlet {
 				break;
 			
 			default:
-				goPage = "/";
-//				goPage = "/login/logout.do";
-				redirect = true;
+				if(session == null || session.isNew()) {
+					resp.sendError(400);
+				}else {
+					session.removeAttribute("authID");
+					session.invalidate();
+				}
+				goPage = "redirect:/";
+//				goPage = "redirect:/login/logout.do";
 				break;
 			}
 		}else {
 //			   불통
-				goPage = "/WEB-INF/views/member/updatePage.jsp";
+				goPage = "member/updatePage";
 		}
 		
 		req.setAttribute("message", message);
-		if(redirect) {
-//			resp.sendRedirect(req.getContextPath()+ "/index.do");
-//			resp.sendRedirect(req.getContextPath()+ goPage);
-//			HttpSession session = req.getSession(false);
-			
-			if(session == null || session.isNew()) {
-				resp.sendError(400);
-			}else {
-				session.removeAttribute("authID");
-				session.invalidate();
-				
-				resp.sendRedirect(req.getContextPath() + "/");
-			}
-		}else {
-			req.getRequestDispatcher(goPage).forward(req, resp);
-		}
-		
+		return goPage;
 		
 	}
 	

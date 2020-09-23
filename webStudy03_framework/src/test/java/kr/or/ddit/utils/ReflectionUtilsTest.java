@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 
-import kr.or.ddit.annotation.CommandHandler;
-import kr.or.ddit.annotation.URIMapping;
 import kr.or.ddit.member.dao.MemberControllerPsedo;
 import kr.or.ddit.member.dao.MemberDAOImplTest;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 
 public class ReflectionUtilsTest {
 

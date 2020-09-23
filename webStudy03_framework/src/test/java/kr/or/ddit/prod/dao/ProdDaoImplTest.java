@@ -45,9 +45,6 @@ public class ProdDaoImplTest {
 		
 	}
 //	@Test
-	public void test2() {
-		List<ProdVO> list = dao.selectProdList();
-		assertNotEquals(0, list.size());
-	}
+	
 	
 }

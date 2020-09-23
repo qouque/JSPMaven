@@ -17,12 +17,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.or.ddit.annotation.CommandHandler;
-import kr.or.ddit.annotation.URIMapping;
 import kr.or.ddit.commons.dao.IZipCodeDAO;
 import kr.or.ddit.commons.dao.ZipCodeDAOImpl;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParameter;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.SearchVO;
 import kr.or.ddit.vo.ZipVO;
@@ -32,10 +33,17 @@ public class SearchZipController  {
 	private IZipCodeDAO dao = ZipCodeDAOImpl.getInstance();
 	
 	@URIMapping("/searchZip.do")
-	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String startPara = req.getParameter("start");
-		String lengthPara = req.getParameter("length");
-		String searchWord = req.getParameter("searchWord");
+	public String doGet(
+			@RequestParameter(name="searchWord",required=false)
+			String searchWord,
+			@RequestParameter(name="length",required=false)
+			String lengthPara,
+			@RequestParameter(name="start",required=false)
+			String startPara,
+			HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		String startPara = req.getParameter("start");
+//		String lengthPara = req.getParameter("length");
+//		String searchWord = req.getParameter("searchWord");
 		
 //		System.out.println("여기입니다 여기!!!!!!!! : " + searchWord);
 		SearchVO searchVO = new SearchVO();

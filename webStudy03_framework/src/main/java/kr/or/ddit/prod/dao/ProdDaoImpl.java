@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import kr.or.ddit.db.CustomSqlSessionFactoryBuilder;
+import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
 public class ProdDaoImpl implements IProdDAO {
@@ -50,12 +51,23 @@ public class ProdDaoImpl implements IProdDAO {
 	}
 
 	@Override
-	public List<ProdVO> selectProdList() {
+	public List<ProdVO> selectProdList(PagingVO<ProdVO> pagingVO) {
 		try(
 			SqlSession session = sqlSessionFactory.openSession();	
 				){
 			IProdDAO mapper = session.getMapper(IProdDAO.class);
-			return mapper.selectProdList();
+			return mapper.selectProdList(pagingVO);
+		}
+	}
+
+	@Override
+	public int selectProdCount(PagingVO<ProdVO> pagingVO) {
+		try(
+			SqlSession session = sqlSessionFactory.openSession();	
+				){
+			IProdDAO mapper = session.getMapper(IProdDAO.class);
+			
+			return mapper.selectProdCount(pagingVO);
 		}
 	}
 }

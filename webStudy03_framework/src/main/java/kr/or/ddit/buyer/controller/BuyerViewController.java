@@ -12,27 +12,28 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParameter;
 import kr.or.ddit.vo.BuyerVO;
 
-@WebServlet("/buyer/buyerView.do")
+@CommandHandler
 public class BuyerViewController extends HttpServlet {
 	
 	IBuyerService service = BuyerServiceImpl.getInstance();
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		String what = req.getParameter("what");
+	@URIMapping(value="/buyer/buyerView.do")
+	public String doGet(
+			@RequestParameter(name="what")
+			String what,
+			HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		String what = req.getParameter("what");
 		
-		if(StringUtils.isBlank(what)) {
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "필수 파라미터 누락");
-			return;
-		}
 		
 		BuyerVO buyer = service.retrieveBuyer(what);
-		String goPage = "/WEB-INF/views/buyer/buyerView.jsp";
+		String goPage = "buyer/buyerView";
 		req.setAttribute("buyer", buyer);
-		req.getRequestDispatcher(goPage).forward(req, resp);
+		return goPage;
 		
 	}
 }

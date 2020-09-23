@@ -3,6 +3,7 @@ package kr.or.ddit.prod.service;
 import java.util.List;
 
 import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
 
 /**
@@ -12,7 +13,7 @@ import kr.or.ddit.vo.ProdVO;
 
 public interface IProdService  {
 	
-	public List<ProdVO> retrieveProdList();
+	
 	/**
 	 * 신규상품 등록
 	 * @param prod
@@ -25,4 +26,25 @@ public interface IProdService  {
 	 * @return 존재하지 않는다면,  CustomException 발생.
 	 */
 	public ProdVO retrieveProd(String prod_id);
+	
+	public List<ProdVO> retrieveProdList(PagingVO<ProdVO> pagingVO);
+	
+	public int retrieveProdCount(PagingVO<ProdVO> pagingVO);
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

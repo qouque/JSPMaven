@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.or.ddit.annotation.HandlerInvoker;
-import kr.or.ddit.annotation.HandlerMapper;
-import kr.or.ddit.annotation.IHandlerInvoker;
-import kr.or.ddit.annotation.IHandlerMapper;
-import kr.or.ddit.annotation.URIMappingInfo;
+import kr.or.ddit.mvc.annotation.HandlerInvoker;
+import kr.or.ddit.mvc.annotation.HandlerMapper;
+import kr.or.ddit.mvc.annotation.IHandlerInvoker;
+import kr.or.ddit.mvc.annotation.IHandlerMapper;
+import kr.or.ddit.mvc.annotation.URIMappingInfo;
 
 public class FrontController extends HttpServlet {
 	

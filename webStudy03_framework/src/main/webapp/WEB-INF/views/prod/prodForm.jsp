@@ -43,9 +43,16 @@
 						if(lprodGuMap != null && lprodGuMap.size() >0){
 							for(Map<String, Object> map : lprodGuMap){
 								for(Entry<String, Object> entry : map.entrySet()){
-									%>
-									<option value="<%=entry.getKey() %>"><%=entry.getValue() %></option>
-									<%
+									if("lprod_gu".equals(entry.getKey())){
+										%>
+										<option value="<%=entry.getValue() %>">
+										<%
+									}else{
+										%>
+										<%=entry.getValue() %></option>
+										<%
+									}
+									
 								}
 							}
 						}else {

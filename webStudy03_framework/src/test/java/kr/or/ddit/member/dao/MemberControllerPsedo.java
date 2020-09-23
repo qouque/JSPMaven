@@ -3,8 +3,8 @@ package kr.or.ddit.member.dao;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.or.ddit.annotation.CommandHandler;
-import kr.or.ddit.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 
 @CommandHandler
 public class MemberControllerPsedo {

@@ -13,7 +13,7 @@
 					<when test="'address' eq searchVO.searchType">
 							MEM_ADD1 LIKE '%' || #{searchVO.searchWord} ||'%'
 					</when>
-					<when test="'all' eq searchVO.searchType">
+					<when test="'all' eq searchVO.searchType and @org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.searchWord)">
 						INSTR(MEM_NAME, #{searchVO.searchWord}) > 0
 						OR
 						INSTR(MEM_ADD1, #{searchVO.searchWord}) > 0

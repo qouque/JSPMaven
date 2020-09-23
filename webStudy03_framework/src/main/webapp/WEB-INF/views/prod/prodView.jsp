@@ -157,8 +157,16 @@
 				</table>
 			</td>
 		</tr>
+		<tr>
+			<td colspan="2"><input id="goList" type="button" value="목록으로" /></td>	
+		</tr>
 	</table>
+<script type="text/javascript">
 
+	$("#goList").on("click", function() {
+		location.href = "<%= request.getContextPath() %>/prod/prodList.do";
+	});
+</script>
 
 </body>
 </html>

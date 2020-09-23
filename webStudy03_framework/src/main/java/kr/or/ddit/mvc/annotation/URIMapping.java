@@ -1,4 +1,4 @@
-package kr.or.ddit.annotation;
+package kr.or.ddit.mvc.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

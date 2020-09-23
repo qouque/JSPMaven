@@ -1,4 +1,4 @@
-package kr.or.ddit.annotation;
+package kr.or.ddit.mvc.annotation;
 
 public enum HttpMethod {
 	GET, POST, PUT, DELETE

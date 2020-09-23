@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 
 import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.HttpMethod;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.resolvers.ModelData;
 import kr.or.ddit.others.service.IOthersService;
 import kr.or.ddit.others.service.OthersServiceImpl;
 import kr.or.ddit.prod.service.IProdService;
@@ -26,35 +30,40 @@ import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.ProdVO;
 
-@WebServlet("/prod/prodInsert.do")
-public class ProdInsertController extends HttpServlet {
+@CommandHandler
+public class ProdInsertController  {
 	
 	IProdService service = ProdServiceImpl.getInstance();
 	IOthersService otherService = OthersServiceImpl.getInstance();
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping("/prod/prodInsert.do")
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		List<Map<String, Object>> lprodGuMap = otherService.retrieveLprodGuList();
 		
-		List<BuyerVO> buyerList = otherService.retrieveBuyList();
+		List<BuyerVO> buyerList = otherService.retrieveBuyList(null);
 		req.setAttribute("lprodGuMap", lprodGuMap);
 		req.setAttribute("buyerList", buyerList);
-		req.getRequestDispatcher("/WEB-INF/views/prod/prodForm.jsp").forward(req, resp);
+		String goPage = "prod/prodForm";
+		return goPage;
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping(value="/prod/prodInsert.do", method=HttpMethod.POST)
+	public String doPost(
+			@ModelData(name="prod")
+			ProdVO prod,
+			HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		
-		ProdVO prod = new ProdVO();
-		Map<String, String[]> paramMap = req.getParameterMap();
-		try {
-			BeanUtils.populate(prod, paramMap);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		ProdVO prod = new ProdVO();
+//		Map<String, String[]> paramMap = req.getParameterMap();
+//		try {
+//			BeanUtils.populate(prod, paramMap);
+//		} catch (IllegalAccessException | InvocationTargetException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 		Map<String, StringBuffer> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
 		
@@ -63,35 +72,28 @@ public class ProdInsertController extends HttpServlet {
 		
 		String goPage = null;
 		String message = null;
-		boolean redirect = false;
 		System.out.println(valid);
 		if(valid) {
 			ServiceResult result = service.createProd(prod);
 			switch (result) {
 			case FAILED:
-				goPage = "/WEB-INF/views/prod/prodForm.jsp";
+				goPage = "prod/prodForm";
 				message = "서버 문제로 등록이 완료되지 않았습니당 잠시 후 다시 시도해주세요.";
 				break;
 				
 			default:
 //				PRG pattner : Post redirect Get
-				goPage = "/prod/prodView.do?what="+prod.getProd_id();
-				redirect = true;
+				goPage = "redirect:/prod/prodView.do?what="+prod.getProd_id();
 				break;
 			}
 			
 		}else {
 			message = "등록실패";
-			goPage = "/WEB-INF/views/prod/prodForm.jsp";
+			goPage = "prod/prodForm";
 		}
 		
 		req.setAttribute("message", message);
-		if(redirect) {
-			resp.sendRedirect(req.getContextPath()+goPage);
-		}else {
-			
-			req.getRequestDispatcher(goPage).forward(req, resp);
-		}
+		return goPage;
 	}
 	
 }

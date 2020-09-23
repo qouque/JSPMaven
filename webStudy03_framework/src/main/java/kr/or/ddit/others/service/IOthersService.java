@@ -9,7 +9,7 @@ public interface IOthersService {
 	
 	public List<Map<String, Object>> retrieveLprodGuList();
 	
-	public List<BuyerVO> retrieveBuyList();
+	public List<BuyerVO> retrieveBuyList(String buyer_lgu);
 	
 	
 }

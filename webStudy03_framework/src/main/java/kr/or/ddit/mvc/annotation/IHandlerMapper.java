@@ -1,4 +1,4 @@
-package kr.or.ddit.annotation;
+package kr.or.ddit.mvc.annotation;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -11,12 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import kr.or.ddit.annotation.CommandHandler;
-import kr.or.ddit.annotation.HttpMethod;
-import kr.or.ddit.annotation.URIMapping;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.HttpMethod;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.resolvers.ModelData;
 import kr.or.ddit.validate.CommonValidator;
 import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.vo.MemberVO;
@@ -27,24 +28,14 @@ public class MemberRegistController {
 	
 	
 	@URIMapping("/registMember.do")
-	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String doGet() throws ServletException, IOException {
 		return "member/registForm";
 		
 	}
 	
 	@URIMapping(value = "/registMember.do", method=HttpMethod.POST)
-	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		1. 요청 파라미터 획득
-		MemberVO member = new MemberVO();
-		req.setAttribute("member", member);
-		Map<String, String[]> parameterMap = req.getParameterMap();
-		try {
-			BeanUtils.populate(member, parameterMap);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(member);
+	public String doPost(@ModelData(name="member") MemberVO member, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
 //		2. 검증(DB 스키마 구조 참고)
 		Map<String, StringBuffer> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);

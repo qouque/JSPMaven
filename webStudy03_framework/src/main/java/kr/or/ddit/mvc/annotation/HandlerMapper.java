@@ -1,4 +1,4 @@
-package kr.or.ddit.annotation;
+package kr.or.ddit.mvc.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -43,8 +43,7 @@ public class HandlerMapper implements IHandlerMapper {
 			}
 			
 			Map<Method, Annotation> methods =
-					ReflectionUtils.getMethodsWithAnnotationAtClass(handlerType, URIMapping.class, String.class
-							, HttpServletRequest.class, HttpServletResponse.class);
+					ReflectionUtils.getMethodsWithAnnotationAtClass(handlerType, URIMapping.class, String.class);
 			for(Entry<Method, Annotation> mtdEntry : methods.entrySet()) {
 				Method handlerMethod = mtdEntry.getKey();
 				URIMapping mapping= (URIMapping) mtdEntry.getValue();

@@ -30,8 +30,8 @@ public class OthersServiceImpl implements IOthersService{
 	}
 
 	@Override
-	public List<BuyerVO> retrieveBuyList() {
-		List<BuyerVO> list = dao.selectBuyerList();
+	public List<BuyerVO> retrieveBuyList(String buyer_lgu) {
+		List<BuyerVO> list = dao.selectBuyerList(buyer_lgu);
 		return list;
 	}
 

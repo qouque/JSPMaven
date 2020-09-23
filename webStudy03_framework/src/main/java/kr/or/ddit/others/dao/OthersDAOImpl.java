@@ -35,12 +35,12 @@ public class OthersDAOImpl implements IOthersDAO {
 	}
 
 	@Override
-	public List<BuyerVO> selectBuyerList() {
+	public List<BuyerVO> selectBuyerList(String buyer_lgu) {
 		try(
 			SqlSession session = sqlSessionFactory.openSession();	
 		){
 			IOthersDAO mapper = session.getMapper(IOthersDAO.class);
-			return mapper.selectBuyerList();
+			return mapper.selectBuyerList(buyer_lgu);
 		}
 	}
 

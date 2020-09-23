@@ -6,8 +6,8 @@
 	<resultMap type="ProdVO" id="prodMap" autoMapping="true">
 		<id property="prod_id" column="PROD_ID"/>
 		<association property="buyer" javaType="BuyerVO" autoMapping="true" />
+		<association property="lprodVO" javaType="LProdVO" autoMapping="true"/>
 		<collection property="memList" ofType="MemberVO" autoMapping="true"/>
-		<collection property="lprodVO" ofType="LProdVO" autoMapping="true"/>
 	</resultMap>
 	
 	
@@ -66,15 +66,51 @@
 	
 	</insert>
 	
-	<select id="selectProdList" resultType="ProdVO">
+	<sql id="searchFrag">
+		<trim prefix=" WHERE " prefixOverrides="AND">
+			<if test="searchData neq null">
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchData.prod_lgu)">
+					AND prod_lgu = #{searchData.prod_lgu, jdbcType=VARCHAR} 
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchData.prod_name)">
+					AND prod_name = #{searchData.prod_name, jdbcType=VARCHAR} 
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchData.prod_buyer)">
+					AND prod_buyer = #{searchData.prod_buyer, jdbcType=VARCHAR} 
+				</if>
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="selectProdList" parameterType="PagingVO" resultMap="prodMap">
+	
+		 SELECT A.*
+			FROM (               
+			 SELECT ROWNUM RNUM, 
+			    PROD_ID,    PROD_NAME,    PROD_LGU,    PROD_BUYER,
+			    PROD_COST,    PROD_PRICE,    PROD_SALE,    PROD_OUTLINE,
+			    PROD_DETAIL,    PROD_IMG,    PROD_TOTALSTOCK,    TO_CHAR(PROD_INSDATE, 'YYYY-MM-DD'),
+			    PROD_PROPERSTOCK,    PROD_SIZE,    PROD_COLOR,    PROD_DELIVERY,
+			    PROD_UNIT,    PROD_QTYIN,    PROD_QTYSALE,    PROD_MILEAGE
+			    , LPROD_ID,	LPROD_GU, LPROD_NM
+			    ,BUYER_ID, BUYER_NAME, BUYER_CHARGER, BUYER_ADD1
+			FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU)
+			INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+			<include refid="searchFrag"/>
+			) A
+			<![CDATA[
+				WHERE RNUM >=${startRow} AND RNUM <=#{endRow}
+			]]>
+	</select>
+	
+	<select id="selectProdCount" parameterType="PagingVO" resultType="int">
+	
 		SELECT
-		    PROD_ID,    PROD_NAME,    PROD_LGU,    PROD_BUYER,
-		    PROD_COST,    PROD_PRICE,    PROD_SALE,    PROD_OUTLINE,
-		    PROD_DETAIL,    PROD_IMG,    PROD_TOTALSTOCK,    PROD_INSDATE,
-		    PROD_PROPERSTOCK,    PROD_SIZE,    PROD_COLOR,    PROD_DELIVERY,
-		    PROD_UNIT,    PROD_QTYIN,    PROD_QTYSALE,    PROD_MILEAGE
-		FROM
-		    prod
+            COUNT(*)
+        FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU)
+                INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+		<include refid="searchFrag"/>
+	
 	</select>
 </mapper>
 

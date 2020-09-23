@@ -1,4 +1,4 @@
-package kr.or.ddit.annotation;
+package kr.or.ddit.mvc.annotation;
 
 /**
  * immutable 객체로 정의함. - 한번 생성하면 수정할 수 없는 객체.

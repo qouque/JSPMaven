@@ -11,34 +11,31 @@ import javax.servlet.http.HttpSession;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/mypage.do")
-public class MypageControllerServlet extends HttpServlet{
+@CommandHandler
+public class MypageControllerServlet {
 	
 	IMemberService service = MemberServiceImpl.getInstance();
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
+	@URIMapping(value="/mypage.do")
+	public String doGet(
+			HttpSession session,
+			HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		MemberVO authMember = (MemberVO) session.getAttribute("authMember");
 		
 		String goPage = null;
-		boolean redirect = false;
 		if(authMember==null) {
-			goPage = "/login/loginForm.jsp";
-			redirect = true;
+			goPage = "redirect:/login/loginForm.jsp";
 		}else {
 			authMember = service.retrieveMember(authMember.getMem_id());
 			req.setAttribute("authMember", authMember);
-			goPage = "/WEB-INF/views/member/mypage.jsp";
+			goPage = "member/mypage";
 		}
 		
-		if(redirect) {
-			resp.sendRedirect(req.getContextPath() + goPage);
-		}else {
-			req.getRequestDispatcher(goPage).forward(req, resp);
-		}
+		return goPage;
 	}
 }
 
