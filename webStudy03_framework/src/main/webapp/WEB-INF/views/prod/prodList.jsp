@@ -48,8 +48,10 @@
 							trTags.push(
 								$("<tr>").append(
 										$("<td>").text(prodVO.prod_id),
-										$("<td>").text(prodVO.prod_name),
-										$("<td>").text(prodVO.lprodVO.lprod_nm),
+										$("<td>").html(
+											$("<a>").attr("href", "<%= request.getContextPath() %>/prod/prodView.do?what="+prodVO.prod_id).text(prodVO.prod_name)
+										),
+										$("<td>").text(prodVO.lprodVO.lprod_nm),	
 										$("<td>").text(prodVO.buyer.buyer_name),
 										$("<td>").text(prodVO.prod_cost),
 										$("<td>").text(prodVO.prod_price),
@@ -192,7 +194,8 @@
 				%>
 					<tr>
 						<td><%=prod.getProd_id()%></td>
-						<td><%=prod.getProd_name()%></td>
+						<td><a href="<%= request.getContextPath() %>/prod/prodView.do?what=<%= prod.getProd_id() %>"><%=prod.getProd_name()%>
+						</a></td>
 						<td><%=prod.getLprodVO().getLprod_nm()%></td>
 						<td><%=prod.getBuyer().getBuyer_name()%></td>
 						<td><%=prod.getProd_cost()%></td>

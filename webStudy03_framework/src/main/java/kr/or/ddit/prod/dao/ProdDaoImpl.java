@@ -70,6 +70,18 @@ public class ProdDaoImpl implements IProdDAO {
 			return mapper.selectProdCount(pagingVO);
 		}
 	}
+
+	@Override
+	public int updateProd(ProdVO prod) {
+		try(
+			SqlSession session = sqlSessionFactory.openSession();	
+				){
+			IProdDAO mapper = session.getMapper(IProdDAO.class);
+			int cnt = mapper.updateProd(prod);
+			session.commit();
+			return cnt;
+		}
+	}
 }
 
 

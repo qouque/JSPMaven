@@ -39,7 +39,7 @@
 		MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,                                                  
 		MEM_MAIL,    MEM_JOB,    MEM_LIKE,                                                      
 		MEM_MEMORIAL,    TO_CHAR(MEM_MEMORIALDAY, 'YYYY-MM-DD') MEM_MEMORIALDAY,    MEM_MILEAGE,
-		MEM_DELETE                                                                              
+		MEM_DELETE,		MEM_ROLE                                                                              
 		FROM    MEMBER
 		<include refid="searchFrag"/>
 		) A
@@ -65,7 +65,7 @@
 	          MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,                                                        
 	          MEM_MAIL,    MEM_JOB,    MEM_LIKE,                                                            
 	          MEM_MEMORIAL,    TO_CHAR(MEM_MEMORIALDAY, 'YYYY-MM-DD') MEM_MEMORIALDAY,    MEM_MILEAGE,      
-	          MEM_DELETE
+	          MEM_DELETE,		MEM_ROLE
 	             , CART_MEMBER, CART_PROD                                                                                    
 	       FROM    MEMBER LEFT OUTER JOIN CART ON (MEM_ID = CART_MEMBER)                                                                               
 	       WHERE MEM_ID = #{mem_id}
@@ -80,13 +80,15 @@
 		     MEM_REGNO2,    MEM_BIR,    MEM_ZIP,    MEM_ADD1,   
 		     MEM_ADD2,    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,
 		     MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,
-		     MEM_MEMORIALDAY,    MEM_MILEAGE,    MEM_DELETE     
+		     MEM_MEMORIALDAY,    MEM_MILEAGE,    MEM_DELETE
+		     ,		MEM_ROLE     
 		 ) VALUES (                                             
 		 	 #{mem_id},    #{mem_pass},    #{mem_name},    #{mem_regno1},   
 		     #{mem_regno2},    TO_DATE(#{mem_bir,jdbcType=DATE},'YYYY-MM-DD'),    #{mem_zip},    #{mem_add1},   
 		     #{mem_add2},    #{mem_hometel},    #{mem_comtel},    #{mem_hp,jdbcType=VARCHAR},
 		     #{mem_mail},    #{mem_job,jdbcType=VARCHAR},    #{mem_like,jdbcType=VARCHAR},    #{mem_memorial,jdbcType=VARCHAR},
-		     TO_DATE(#{mem_memorialday,jdbcType=DATE}, 'YYYY-MM-DD'),    #{mem_mileage,jdbcType=NUMERIC},    #{mem_delete,jdbcType=VARCHAR}               
+		     TO_DATE(#{mem_memorialday,jdbcType=DATE}, 'YYYY-MM-DD'),    #{mem_mileage,jdbcType=NUMERIC},    #{mem_delete,jdbcType=VARCHAR}
+		     , 'ROLE_USER'               
 		 )  
 	</insert>
 	

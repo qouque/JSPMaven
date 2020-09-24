@@ -19,4 +19,6 @@ public interface IProdDAO {
 	
 	public int selectProdCount(PagingVO<ProdVO> pagingVO);
 	
+	public int updateProd(ProdVO prod);
+	
 }

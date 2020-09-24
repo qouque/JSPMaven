@@ -95,7 +95,9 @@ public class MemberVO implements Serializable{
 	private String mem_memorialday;
 	private Integer mem_mileage;
 	private String mem_delete;
-
+	
+	private String mem_role;
+	
 	private List<ProdVO> prodList;
 	
 	private final String PATTERN = "<td>%s</a></td>";

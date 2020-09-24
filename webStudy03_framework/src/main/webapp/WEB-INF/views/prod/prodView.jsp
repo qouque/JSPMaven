@@ -20,6 +20,14 @@
 %>
 	<table class="table table-bordered">
 			<tr>
+				<td colspan="2">
+				<input id="goList" type="button" value="목록으로" />
+				<input type="button" value="수정하기" 
+					onclick="location.href='<%= request.getContextPath() %>/prod/prodUpdate.do?what=<%= prod.getProd_id() %>';"
+				/>
+				</td>	
+			</tr>
+			<tr>
 				<th>상품코드</th>
 				<td><%=prod.getProd_id()%></td>
 			</tr>
@@ -157,9 +165,7 @@
 				</table>
 			</td>
 		</tr>
-		<tr>
-			<td colspan="2"><input id="goList" type="button" value="목록으로" /></td>	
-		</tr>
+		
 	</table>
 <script type="text/javascript">
 

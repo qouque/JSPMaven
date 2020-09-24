@@ -31,6 +31,12 @@ public interface IProdService  {
 	
 	public int retrieveProdCount(PagingVO<ProdVO> pagingVO);
 	
+	/**
+	 * 상춤 수정
+	 * @param prod
+	 * @return OK, FAILED
+	 */
+	public ServiceResult modifyProd(ProdVO prod);
 }
 
 

@@ -58,5 +58,16 @@ public class ProdServiceImpl implements IProdService {
 		int cnt = dao.selectProdCount(pagingVO);
 		return cnt;
 	}
-
+	
+	@Override
+	public ServiceResult modifyProd(ProdVO prod) {
+		ServiceResult result = null;
+		int rowCnt = dao.updateProd(prod);
+		if(rowCnt > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
 }
