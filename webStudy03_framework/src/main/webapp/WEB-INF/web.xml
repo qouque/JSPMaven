@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
-  <display-name>webStudy01</display-name>
+  <display-name>webStudy03_framework</display-name>
   <welcome-file-list>
     <welcome-file>index.do</welcome-file>
   </welcome-file-list>
+  
+  <listener>
+  	<listener-class>kr.or.ddit.listener.SampleListener</listener-class>
+  </listener>
+  
   <context-param>
     <param-name>contentsPath</param-name>
     <param-value>d:/contents</param-value>
@@ -12,71 +17,48 @@
     <param-name>testParam</param-name>
     <param-value>paramValue</param-value>
   </context-param>
-  
   <filter>
-  	<filter-name>CharaterEncodingFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.CharaterEncodingFilter</filter-class>
-  	<init-param>
-  		<param-name>encoding</param-name>
-  		<param-value>UTF-8</param-value>
-  	</init-param>
+    <filter-name>CharaterEncodingFilter</filter-name>
+    <filter-class>kr.or.ddit.filter.CharaterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
-  	<filter-name>CharaterEncodingFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
+    <filter-name>CharaterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
   <filter>
-  	<filter-name>AuthenticationFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.AuthenticationFilter</filter-class>
+    <filter-name>FileUploadCheckFilter</filter-name>
+    <filter-class>kr.or.ddit.filter.FileUploadCheckFilter</filter-class>
   </filter>
   <filter-mapping>
-  	<filter-name>AuthenticationFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
+    <filter-name>FileUploadCheckFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
   </filter-mapping>
-  
-  <filter>
-  	<filter-name>AuthorizationFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.AuthorizationFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>AuthorizationFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
-  </filter-mapping>
-  
-  <filter>
-  	<filter-name>FileUploadCheckFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.FileUploadCheckFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>FileUploadCheckFilter</filter-name>
-  	<url-pattern>*.do</url-pattern>
-  </filter-mapping>
-  
   <servlet>
-  	<servlet-name>FrontController</servlet-name>
-  	<servlet-class>kr.or.ddit.mvc.FrontController</servlet-class>
-  	<init-param>
-  		<param-name>basePackage</param-name>
-  		<param-value>kr.or.ddit</param-value>
-  	</init-param>
-  	<init-param>
-  		<param-name>prefix</param-name>
-  		<param-value>/WEB-INF/views/</param-value>
-  	</init-param>
-  	<init-param>
-  		<param-name>suffix</param-name>
-  		<param-value>.jsp</param-value>
-  	</init-param>
-  	
-  	<load-on-startup>1</load-on-startup>
-  	<multipart-config></multipart-config>
+    <servlet-name>FrontController</servlet-name>
+    <servlet-class>kr.or.ddit.mvc.FrontController</servlet-class>
+    <init-param>
+      <param-name>basePackage</param-name>
+      <param-value>kr.or.ddit</param-value>
+    </init-param>
+    <init-param>
+      <param-name>prefix</param-name>
+      <param-value>/WEB-INF/views/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>suffix</param-name>
+      <param-value>.jsp</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+    <multipart-config/>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>FrontController</servlet-name>
-  	<url-pattern>*.do</url-pattern>
+    <servlet-name>FrontController</servlet-name>
+    <url-pattern>*.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>DescriptionServlet</servlet-name>
     <servlet-class>kr.or.ddit.servlet01.DescriptionServlet</servlet-class>
@@ -107,7 +89,6 @@
     <servlet-name>ImageListServlet</servlet-name>
     <url-pattern>/image/imageList.do</url-pattern>
   </servlet-mapping>
-  
   <session-config>
     <session-timeout>10</session-timeout>
   </session-config>

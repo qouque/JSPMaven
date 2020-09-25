@@ -1,5 +1,6 @@
 package kr.or.ddit.prod.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 
 import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
+import kr.or.ddit.filter.wrapper.PartWrapper;
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
@@ -53,16 +56,14 @@ public class ProdInsertController  {
 			@ModelData(name="prod")
 			ProdVO prod,
 			HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
+		// 검증 전에 prod_img 결정
 		
-//		ProdVO prod = new ProdVO();
-//		Map<String, String[]> paramMap = req.getParameterMap();
-//		try {
-//			BeanUtils.populate(prod, paramMap);
-//		} catch (IllegalAccessException | InvocationTargetException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		if(req instanceof FileUploadRequestWrapper) {
+			PartWrapper imageFile = ((FileUploadRequestWrapper) req).getPartWrapper("prod_image");
+			if(imageFile != null) {
+				prod.setProd_image(imageFile);
+			}
+		}
 		
 		Map<String, StringBuffer> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);

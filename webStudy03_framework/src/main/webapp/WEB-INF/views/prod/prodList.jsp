@@ -1,11 +1,6 @@
-<%@page import="kr.or.ddit.vo.BuyerVO"%>
-<%@page import="java.util.Map.Entry"%>
-<%@page import="java.util.Map"%>
-<%@page import="kr.or.ddit.vo.PagingVO"%>
-<%@page import="kr.or.ddit.vo.ProdVO"%>
-<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,7 +44,7 @@
 								$("<tr>").append(
 										$("<td>").text(prodVO.prod_id),
 										$("<td>").html(
-											$("<a>").attr("href", "<%= request.getContextPath() %>/prod/prodView.do?what="+prodVO.prod_id).text(prodVO.prod_name)
+											$("<a>").attr("href", "${pageContext.request.contextPath}/prod/prodView.do?what="+prodVO.prod_id).text(prodVO.prod_name)
 										),
 										$("<td>").text(prodVO.lprodVO.lprod_nm),	
 										$("<td>").text(prodVO.buyer.buyer_name),
@@ -96,7 +91,7 @@
 			let prod_lgu = $(this).val();
 			
 			$.ajax({
-				url : "<%= request.getContextPath() %>/prod/buyerOption.do",
+				url : "${pageContext.request.contextPath}/prod/buyerOption.do",
 				data : {
 					prod_lgu : prod_lgu
 				},
@@ -132,28 +127,19 @@
 
 </script>
 </head>
-<%
+<%--
 	PagingVO<ProdVO> pagingVO = (PagingVO<ProdVO>)request.getAttribute("pagingVO"); 
-%>
+--%>
 <body>
-	<form id="prodListForm" action="<%= request.getContextPath() %>/prod/prodList.do" method="get">
+	<form id="prodListForm" action="${pageContext.request.contextPath}/prod/prodList.do" method="get">
 		<input type="hidden" name="page" >
 		<select name="prod_lgu" class="submitSelect" id="selectLgu">
 			<option value>상품분류 선택</option>
-			<%
-				List<Map<String, Object>> lprodGuMap =(List<Map<String, Object>>) request.getAttribute("lprodGuMap");
-				if(lprodGuMap != null && lprodGuMap.size() >0){
-					for(Map<String, Object> lprod : lprodGuMap){
-						%>
-						<option value="<%=lprod.get("lprod_gu") %>"><%=lprod.get("lprod_nm") %></option>
-						<%
-					}
-				}else {
-					%>
-					<option value>비어있어용</option>
-					<%
-				}
-			%>
+			<c:forEach  items="${lprodGuMap }" var="lprod">
+				<option value="">${lprod.lprod_nm }</option>
+				
+			</c:forEach>
+			
 		</select>
 		<select name="prod_buyer" class="submitSelect" id="selectBuyer">
 			<option value>상품분류를 선택 해주세요</option>
@@ -188,40 +174,49 @@
 			</tr>
 		</thead>
 		<tbody>
-			<%
-				List<ProdVO> prodList = pagingVO.getData();
-				for(ProdVO prod : prodList){
-				%>
+		<c:set var="dataList" value="${pagingVO.data }" />
+		
+		<c:choose>
+			<c:when test="${not empty dataList }">
+				<c:forEach items="${dataList }" var="prod">
 					<tr>
-						<td><%=prod.getProd_id()%></td>
-						<td><a href="<%= request.getContextPath() %>/prod/prodView.do?what=<%= prod.getProd_id() %>"><%=prod.getProd_name()%>
-						</a></td>
-						<td><%=prod.getLprodVO().getLprod_nm()%></td>
-						<td><%=prod.getBuyer().getBuyer_name()%></td>
-						<td><%=prod.getProd_cost()%></td>
-						<td><%=prod.getProd_price()%></td>
-						<td><%=prod.getProd_sale()%></td>
-						<td><%=prod.getProd_outline()%></td>
-						<td><%=prod.getProd_detail()%></td>
-						<td><%=prod.getProd_img()%></td>
-						<td><%=prod.getProd_totalstock()%></td>
-						<td><%=prod.getProd_insdate()%></td>
-						<td><%=prod.getProd_properstock()%></td>
-						<td><%=prod.getProd_size()%></td>
-						<td><%=prod.getProd_color()%></td>
-						<td><%=prod.getProd_delivery()%></td>
-						<td><%=prod.getProd_unit()%></td>
-						<td><%=prod.getProd_qtyin()%></td>
-						<td><%= prod.getProd_qtysale()%></td>
-						<td><%= prod.getProd_mileage()%></td>
+						<c:url value="/prod/prodView.do" var="prodViewURL" >
+							<c:param name="what" value="${prod.prod_id }"></c:param>
+						</c:url>
+						<td>${prod.prod_id}</td>
+						<td><a href="${prodViewURL }">${prod.prod_name}</a></td>
+						<td>${prod.lprodVO.lprod_nm}</td>
+						<td>${prod.buyer.buyer_name}</td>
+						<td>${prod.prod_cost}</td>
+						<td>${prod.prod_price}</td>
+						<td>${prod.prod_sale}</td>
+						<td>${prod.prod_outline}</td>
+						<td>${prod.prod_detail}</td>
+						<td>${prod.prod_img}</td>
+						<td>${prod.prod_totalstock}</td>
+						<td>${prod.prod_insdate}</td>
+						<td>${prod.prod_properstock}</td>
+						<td>${prod.prod_size}</td>
+						<td>${prod.prod_color}</td>
+						<td>${prod.prod_delivery}</td>
+						<td>${prod.prod_unit}</td>
+						<td>${prod.prod_qtyin}</td>
+						<td>${prod.prod_qtysale}</td>
+						<td>${prod.prod_mileage}</td>
 					</tr>
-				<%
-				}
-			%>
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
+				<tr>
+					 <td colspan='20'>비어있음</td>
+				</tr>
+			</c:otherwise>
+		</c:choose>
+			
 		</tbody>
 	</table>
 	<div id="pagingArea">
-	  <%= pagingVO.getPagingHTML_BS() %>
+	${pagingVO.pagingHTML_BS }
 	</div>
 </body>
 </html>

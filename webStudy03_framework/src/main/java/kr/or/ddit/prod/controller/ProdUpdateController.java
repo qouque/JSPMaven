@@ -1,5 +1,7 @@
 package kr.or.ddit.prod.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import kr.or.ddit.Constans;
 import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
+import kr.or.ddit.filter.wrapper.PartWrapper;
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.HttpMethod;
 import kr.or.ddit.mvc.annotation.URIMapping;
@@ -47,7 +51,15 @@ public class ProdUpdateController {
 	public String updateProdPost(
 			@ModelData(name="prod")
 			ProdVO prod,
-			HttpServletRequest req, HttpServletResponse resp) {
+			HttpServletRequest req) throws IOException {
+		
+		if(req instanceof FileUploadRequestWrapper) {
+			PartWrapper imageFile = ((FileUploadRequestWrapper) req).getPartWrapper("prod_image");
+			if(imageFile != null) {
+				prod.setProd_image(imageFile);
+			}
+		}
+		
 		ServiceResult result = service.modifyProd(prod);
 		String goPage = null;
 		String message = null;

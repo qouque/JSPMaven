@@ -88,7 +88,7 @@
 <body>
 <jsp:useBean id="member" class="kr.or.ddit.vo.MemberVO" scope="request"></jsp:useBean>
 <jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"></jsp:useBean>
-<form action="<%= request.getContextPath() %>/myDataUpdate.do" id="updateForm" method="post">
+<form action="<%= request.getContextPath() %>/myDataUpdate.do" id="updateForm" method="post" enctype="multipart/form-data">
 		
 		<table class="table table-bordered">
 			<tr>
@@ -107,7 +107,11 @@
 				<th>회원명</th>
 				<td><input type="text" name="mem_name" value ="${member.mem_name}" maxLength="20" required/>
 					<span class="error"><%= errors.get("mem_name") %></span>
-					</td>
+				</td>
+			</tr>
+			<tr>
+				<th>사진</th>
+				<td><input type="file" name="mem_image" value ="" /></td>
 			</tr>
 			<tr>
 				<th>우편번호</th>

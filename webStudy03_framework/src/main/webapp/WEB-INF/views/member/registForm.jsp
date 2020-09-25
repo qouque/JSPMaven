@@ -147,43 +147,43 @@
 <jsp:useBean id="member" class="kr.or.ddit.vo.MemberVO" scope="request"></jsp:useBean>
 <jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"></jsp:useBean>
 <body>
-	<form id="registForm" method="post">
+	<form id="registForm" method="post" enctype="multipart/form-data">
 		<table class="table table-bordered">
 			<tr>
 				<th>아이디</th>
 				<td><input type="text" name="mem_id" value ="${member.mem_id}" maxLength="15" required/>
 				<button type="button" class="btn btn-primary" id="checkBtn">아이디 중복체크</button>
-					<span class="error"><%= errors.get("mem_id") %></span>
+					<span class="error">${erros["mem_id"]}<%= errors.get("mem_id") %></span>
 				</td>
 			</tr>
 			<tr>
 				<th>비밀번호</th>
 				<td><input type="text" name="mem_pass" value ="${member.mem_pass}" maxLength="15" required/>
-					<span class="error"><%= errors.get("mem_pass") %></span>	
+					<span class="error">${errors["mem_pass"]}</span>	
 				</td>
 			</tr>
 			<tr>
 				<th>회원명</th>
 				<td><input type="text" name="mem_name" value ="${member.mem_name}" maxLength="20" required/>
-					<span class="error"><%= errors.get("mem_name") %></span>
+					<span class="error">${errors["mem_name"]}</span>
 					</td>
 			</tr>
 			<tr>
 				<th>주민번호1</th>
 				<td><input type="text" name="mem_regno1" value ="${member.mem_regno1}" maxLength="6" required/>
-				<span class="error"><%= errors.get("mem_regno1") %></span>
+				<span class="error">${errors["mem_regno1"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>주민번호2</th>
 				<td><input type="text" name="mem_regno2" value ="${member.mem_regno2}" maxLength="7" required/>
-				<span class="error"><%= errors.get("mem_regno2") %></span>
+				<span class="error">${errors["mem_regno2"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>생일</th>
 				<td><input type="date" name="mem_bir" value ="${member.mem_bir}" placeholder="1999-01-01" pattern="yy-MM-dd" required/>
-				<span class="error"><%= errors.get("mem_bir") %></span>
+				<span class="error">${errors["mem_bir"]}</span>
 				</td>
 			</tr>
 			<tr>
@@ -191,44 +191,44 @@
 				<td><input id="zip" type="text" name="mem_zip" value ="${member.mem_zip}" maxLength="7" readonly required/>
 				<button type="button"  class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop" id="searchZip">
 				우편번호 검색</button>
-				<span class="error"><%= errors.get("mem_zip") %></span>
+				<span class="error">${errors["mem_zip"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>주소1</th>
 				<td><input id="add1" type="text" name="mem_add1" value ="${member.mem_add1}" maxLength="100" readonly required/>
 					
-					<span class="error"><%= errors.get("mem_add1") %></span>
+					<span class="error">${errors["mem_add1"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>주소2</th>
 				<td><input type="text" name="mem_add2" value ="${member.mem_add2}" maxLength="80" required/>
-				<span class="error"><%= errors.get("mem_add2") %></span>
+				<span class="error">${errors["mem_add2"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>집전번</th>
 				<td><input type="text" name="mem_hometel" value ="${member.mem_hometel}" maxLength="14" required/>
-				<span class="error"><%= errors.get("mem_hometel") %></span>
+				<span class="error">${errors["mem_hometel"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>회사전번</th>
 				<td><input type="text" name="mem_comtel" value ="${member.mem_comtel}" maxLength="14" required/>
-				<span class="error"><%= errors.get("mem_comtel") %></span>
+				<span class="error">${errors["mem_comtel"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>휴대폰</th>
 				<td><input type="text" name="mem_hp" value ="${member.mem_hp}" maxLength="15" />
-				<span class="error"><%= errors.get("mem_hp") %></span>
+				<span class="error">${errors["mem_hp"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>이메일</th>
 				<td><input type="text" name="mem_mail" value ="${member.mem_mail}" maxLength="40" required/>
-				<span class="error"><%= errors.get("mem_mail") %></span>
+				<span class="error">${errors["mem_mail"]}</span>
 				</td>
 			</tr>
 			<tr>
@@ -248,13 +248,10 @@
 				<td><input type="date" name="mem_memorialday" value ="${member.mem_memorialday}" placeholder="1999-01-01" pattern="yy-MM-dd"/></td>
 			</tr>
 			<tr>
-				<th>마일리지</th>
-				<td><input type="number" name="mem_mileage" value ="${member.mem_mileage}" maxLength="22" /></td>
+				<th>사진</th>
+				<td><input type="file" name="mem_image" value ="" /></td>
 			</tr>
-			<tr>
-				<th>탈퇴여부</th>
-				<td><input type="text" name="mem_delete" value ="${member.mem_delete}" maxLength="1" /></td>
-			</tr>
+			
 			<tr>
 				<td colspan="2"><input type="submit" value="전송" /> <input
 					type="reset" value="취소" /></td>
@@ -269,7 +266,7 @@
         <h5 class="modal-title" id="staticBackdropLabel">우편번호검색</h5>
       </div>
       <div class="modal-body">
-         <form action="<%= request.getContextPath() %>/searchZip.do" method="get" id="searchForm">
+         <form action="${pageContext.request.contextPath}/searchZip.do" method="get" id="searchForm">
 			<div class = "box">
 				동입력 <input type="text" id = "searchWord" name="searchWord"> 
 				<input id="searchBtn" type = "submit" value = "확인">

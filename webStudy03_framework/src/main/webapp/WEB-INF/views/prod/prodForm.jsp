@@ -1,4 +1,4 @@
- <%@page import="kr.or.ddit.vo.BuyerVO"%>
+<%@page import="kr.or.ddit.vo.BuyerVO"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Map"%>
@@ -65,7 +65,7 @@
 <jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"></jsp:useBean>
 <jsp:useBean id="prod" class="kr.or.ddit.vo.ProdVO" scope="request"></jsp:useBean>
 
-<form id="registForm" method="post">
+<form id="registForm" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="prod_id" value="${prod.prod_id}"/>
 	<table class="table table-bordered">
 			<tr>

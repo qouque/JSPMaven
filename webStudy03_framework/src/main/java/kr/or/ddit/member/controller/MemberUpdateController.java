@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.beanutils.BeanUtils;
 
 import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
+import kr.or.ddit.filter.wrapper.PartWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.annotation.CommandHandler;
@@ -48,8 +50,14 @@ public class MemberUpdateController  {
 			MemberVO member,
 			HttpSession session,
 			HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		System.out.println("MemberUpdateController - post통과용");
 //		HttpSession session = req.getSession();
+		if(req instanceof FileUploadRequestWrapper) {
+			PartWrapper mem_image = ((FileUploadRequestWrapper) req).getPartWrapper("mem_image");
+			
+			member.setMem_image(mem_image);
+		}
 		
 		System.out.println(member);
 		

@@ -1,8 +1,15 @@
 package kr.or.ddit.vo;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
@@ -10,6 +17,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
+import org.apache.commons.io.IOUtils;
+
+import kr.or.ddit.filter.wrapper.PartWrapper;
 import kr.or.ddit.validate.DeleteGroup;
 import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.validate.UpdateGroup;
@@ -38,15 +48,14 @@ import lombok.ToString;
  *		1:1 - association
  *
  */
-@Getter
-@Setter
+
 @EqualsAndHashCode(of= {"mem_id"})
 @ToString(exclude= {"mem_regno1", "mem_regno2"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberVO implements Serializable{
+public class MemberVO implements Serializable, HttpSessionBindingListener{
 	
 	@NotBlank(groups= {Default.class, DeleteGroup.class})
 	@Size(max =15, groups= {Default.class, DeleteGroup.class})
@@ -97,6 +106,28 @@ public class MemberVO implements Serializable{
 	private String mem_delete;
 	
 	private String mem_role;
+	private byte[] mem_img;
+	private PartWrapper mem_image;
+	public void setMem_image(PartWrapper mem_image) throws IOException {
+		this.mem_image = mem_image;
+		//??
+		if(mem_image!=null) {
+			byte[] buffer = new byte[1024];
+			int read;
+			try(
+				InputStream is = mem_image.getInputStream();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+			){
+//				IOUtils 에도 byte[] 로  OutStream 하는 메소드가 있음
+				
+				while((read=is.read(buffer))!= -1) {
+					out.write(buffer, 0, read);
+				}
+				out.flush();
+				this.mem_img = out.toByteArray();
+			}
+		}
+	}
 	
 	private List<ProdVO> prodList;
 	
@@ -127,6 +158,37 @@ public class MemberVO implements Serializable{
 		return memberInfo.toString();
 	}
 	
+	public String getMem_imgBase64() {
+		String base64Str = null; 
+		if(mem_img != null) {
+			base64Str = Base64.getEncoder().encodeToString(mem_img);
+		}
+		return base64Str;
+	}
+	
+	@Override
+	public void valueBound(HttpSessionBindingEvent event) {
+		String name = event.getName();
+		if(!"authMember".equals(name)) {
+			return;
+		}
+		
+ 		Map<String, MemberVO> userList = (Map<String, MemberVO>) event.getSession().getServletContext().getAttribute("userList");
+ 		userList.put(mem_id, this);
+		
+	}
+	
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		String name = event.getName();
+		if(!"authMember".equals(name)) {
+			return;
+		}
+//		MemberVO authMember = (MemberVO) event.getValue();
+ 		Map<String, MemberVO> userList = (Map<String, MemberVO>) event.getSession().getServletContext().getAttribute("userList");
+ 		userList.remove(mem_id);
+		
+	}
 }
 
 

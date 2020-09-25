@@ -39,15 +39,9 @@ public class ProdDaoImpl implements IProdDAO {
 	}
 
 	@Override
-	public int insertProd(ProdVO prod) {
-		try(
-			SqlSession session = sqlSessionFactory.openSession();	
-			){
-			IProdDAO mapper = session.getMapper(IProdDAO.class);
-			int rowcnt = mapper.insertProd(prod);
-			session.commit();
-			return rowcnt;
-		}
+	public int insertProd(ProdVO prod, SqlSession session) {
+		
+		return session.insert("kr.or.ddit.prod.dao.IProdDAO.insertProd", prod);
 	}
 
 	@Override
@@ -72,15 +66,9 @@ public class ProdDaoImpl implements IProdDAO {
 	}
 
 	@Override
-	public int updateProd(ProdVO prod) {
-		try(
-			SqlSession session = sqlSessionFactory.openSession();	
-				){
-			IProdDAO mapper = session.getMapper(IProdDAO.class);
-			int cnt = mapper.updateProd(prod);
-			session.commit();
-			return cnt;
-		}
+	public int updateProd(ProdVO prod, SqlSession session) {
+		
+		return session.update("kr.or.ddit.prod.dao.IProdDAO.updateProd", prod);
 	}
 }
 

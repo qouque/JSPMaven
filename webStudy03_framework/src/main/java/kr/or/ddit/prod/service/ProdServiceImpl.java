@@ -1,9 +1,16 @@
 package kr.or.ddit.prod.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
+import kr.or.ddit.db.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.exception.CustomException;
+import kr.or.ddit.listener.SampleListener;
 import kr.or.ddit.prod.dao.IProdDAO;
 import kr.or.ddit.prod.dao.ProdDaoImpl;
 import kr.or.ddit.vo.PagingVO;
@@ -12,9 +19,13 @@ import kr.or.ddit.vo.ProdVO;
 public class ProdServiceImpl implements IProdService {
 	
 	private static IProdService self;
-	
+	SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getsqlSessionFactory();
+	File folder;
 	private ProdServiceImpl() {
 		super();
+		String folderURL = "/prodImages";
+		String folderPath = SampleListener.currentContext.getRealPath(folderURL);
+		folder = new File(folderPath);
 	}
 	
 	public static IProdService getInstance() {
@@ -37,16 +48,31 @@ public class ProdServiceImpl implements IProdService {
 
 	@Override
 	public ServiceResult createProd(ProdVO prod) {
-		ServiceResult result = null;
-		int rowcnt = dao.insertProd(prod);
-		if(rowcnt>0) {
-			result = ServiceResult.OK;
-		}else {
-			result = ServiceResult.FAILED;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();	
+		){
+			int rowcnt = dao.insertProd(prod, session);
+			
+//			if(1==1) throw new RuntimeException("트랜잭션 관리여부를 확인하기 위한 강제 예외");
+			prod.getProd_image().saveToRealPath(folder);
+			
+			
+			ServiceResult result = null;
+			if(rowcnt>0) {
+				result = ServiceResult.OK;
+				session.commit();
+			}else {
+				result = ServiceResult.FAILED;
+				
+			}
+			return result;
+		}catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		return result;
 	}
-
+	
+	
+	
 	@Override
 	public List<ProdVO> retrieveProdList(PagingVO<ProdVO> pagingVO) {
 		List<ProdVO> list = dao.selectProdList(pagingVO);
@@ -61,13 +87,36 @@ public class ProdServiceImpl implements IProdService {
 	
 	@Override
 	public ServiceResult modifyProd(ProdVO prod) {
-		ServiceResult result = null;
-		int rowCnt = dao.updateProd(prod);
-		if(rowCnt > 0) {
-			result = ServiceResult.OK;
-		}else {
-			result = ServiceResult.FAILED;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			int rowCnt = dao.updateProd(prod, session);
+			
+//			if(1==1) throw new RuntimeException("트랜잭션 관리여부를 확인하기 위한 강제 예외");
+			
+			ServiceResult result = null;
+			if(rowCnt > 0) {
+				result = ServiceResult.OK;
+				if(prod.getProd_image()!=null) {
+					prod.getProd_image().saveToRealPath(folder);
+				}
+				session.commit();
+			}else {
+				result = ServiceResult.FAILED;
+			}
+			return result;
+		}catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		return result;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
