@@ -105,7 +105,7 @@
 			let inputId = idInputTag.val();
 			//console.log(mem_id);
 			$.ajax({
-				url : "<%=request.getContextPath()%>/idCheck.do",
+				url : "${pageContext.request.contextPath}/idCheck.do",
 				// inputId 파라미터로 중복 확인
 				data : {
 					inputId : inputId

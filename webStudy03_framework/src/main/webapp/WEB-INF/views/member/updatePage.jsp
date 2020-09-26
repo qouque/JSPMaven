@@ -14,7 +14,7 @@
 		registForm.validate();
 		
 		$("#cancelBtn").on("click", function() {
-			location.href="<%= request.getContextPath() %>/mypage.do";
+			location.href="${pageContext.request.contextPath}/mypage.do";
 		})
 		
 		//우편번호 가져오기
@@ -28,7 +28,7 @@
 // 			let data = $(this).serialize();
 			
 			$.ajax({
-				url : "<%= request.getContextPath() %>/searchZip.do",
+				url : "${pageContext.request.contextPath}/searchZip.do",
 				type : 'post',
 				data : {"dong" : dongval},
 				dataType : 'json',
@@ -73,14 +73,10 @@
 			$('#exampleModal').modal("hide");
 // 			window.close();
 		})
-	<%
-		String message = (String) request.getAttribute("message");
-		if(StringUtils.isNotBlank(message)){
-			%>
-			alert("<%= message %>");
-			<%
+		
+		if("${message}"){
+			alert("${message}");
 		}
-	%>
 	});
 
 </script>
@@ -88,25 +84,25 @@
 <body>
 <jsp:useBean id="member" class="kr.or.ddit.vo.MemberVO" scope="request"></jsp:useBean>
 <jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"></jsp:useBean>
-<form action="<%= request.getContextPath() %>/myDataUpdate.do" id="updateForm" method="post" enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/myDataUpdate.do" id="updateForm" method="post" enctype="multipart/form-data">
 		
 		<table class="table table-bordered">
 			<tr>
 				<th>아이디</th>
 				<td><input type="text" name="mem_id" value ="${member.mem_id}" maxLength="15" readonly required/>
-					<span class="error"><%= errors.get("mem_id") %></span>
+					<span class="error">${errors["mem_id"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>비밀번호</th>
 				<td><input type="text" name="mem_pass"  maxLength="15" required/>
-					<span class="error"><%= errors.get("mem_pass") %></span>	
+					<span class="error">${errors["mem_pass"]}</span>	
 				</td>
 			</tr>
 			<tr>
 				<th>회원명</th>
 				<td><input type="text" name="mem_name" value ="${member.mem_name}" maxLength="20" required/>
-					<span class="error"><%= errors.get("mem_name") %></span>
+					<span class="error">${errors["mem_name"]}</span>
 				</td>
 			</tr>
 			<tr>
@@ -118,44 +114,44 @@
 				<td><input id="zip" type="text" name="mem_zip" value ="${member.mem_zip}" maxLength="7" readonly required/>
 				<button type="button"  class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="searchZip">
 				우편번호 검색</button>
-				<span class="error"><%= errors.get("mem_zip") %></span>
+				<span class="error">${errors["mem_zip"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>주소1</th>
 				<td><input id="add1" type="text" name="mem_add1" value ="${member.mem_add1}" maxLength="100" readonly required/>
 					
-					<span class="error"><%= errors.get("mem_add1") %></span>
+					<span class="error">${errors["mem_add1"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>주소2</th>
 				<td><input type="text" name="mem_add2" value ="${member.mem_add2}" maxLength="80" required/>
-				<span class="error"><%= errors.get("mem_add2") %></span>
+				<span class="error">${errors["mem_add2"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>집전번</th>
 				<td><input type="text" name="mem_hometel" value ="${member.mem_hometel}" maxLength="14" required/>
-				<span class="error"><%= errors.get("mem_hometel") %></span>
+				<span class="error">${errors["mem_hometel"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>회사전번</th>
 				<td><input type="text" name="mem_comtel" value ="${member.mem_comtel}" maxLength="14" required/>
-				<span class="error"><%= errors.get("mem_comtel") %></span>
+				<span class="error">${errors["mem_comtel"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>휴대폰</th>
 				<td><input type="text" name="mem_hp" value ="${member.mem_hp}" maxLength="15" />
-				<span class="error"><%= errors.get("mem_hp") %></span>
+				<span class="error">${errors["mem_hp"]}</span>
 				</td>
 			</tr>
 			<tr>
 				<th>이메일</th>
 				<td><input type="text" name="mem_mail" value ="${member.mem_mail}" maxLength="40" required/>
-				<span class="error"><%= errors.get("mem_mail") %></span>
+				<span class="error">${errors["mem_mail"]}</span>
 				</td>
 			</tr>
 			<tr>

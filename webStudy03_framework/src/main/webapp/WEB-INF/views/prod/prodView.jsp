@@ -49,7 +49,7 @@
 					<tbody>
 						<tr>
 							<td><a
-								href="<%= request.getContextPath() %>/buyer/buyerView.do?what=${prod.buyer.buyer_id}">${prod.buyer.buyer_name}</a></td>
+								href="${pageContext.request.contextPath}/buyer/buyerView.do?what=${prod.buyer.buyer_id}">${prod.buyer.buyer_name}</a></td>
 							<td>${prod.buyer.buyer_add1}</td>
 							<td>${prod.buyer.buyer_charger}</td>
 						</tr>
@@ -80,7 +80,7 @@
 		<tr>
 			<th>상품이미지경로</th>
 			<td><img alt=""
-				src="<%=request.getContextPath()%>/prodImages/${prod.prod_img}"></td>
+				src="${pageContext.request.contextPath}/prodImages/${prod.prod_img}"></td>
 		</tr>
 		<tr>
 			<th>총재고</th>
@@ -163,7 +163,7 @@
 	<script type="text/javascript">
 
 	$("#goList").on("click", function() {
-		location.href = "<%=request.getContextPath()%>/prod/prodList.do";
+		location.href = "${pageContext.request.contextPath}/prod/prodList.do";
 		});
 	</script>
 

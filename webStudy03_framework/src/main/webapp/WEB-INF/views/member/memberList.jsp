@@ -1,8 +1,6 @@
-<%@page import="java.util.List"%>
-<%@page import="kr.or.ddit.vo.MemberVO"%>
-<%@page import="kr.or.ddit.vo.PagingVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +25,7 @@
 		$("#memberListTable>tbody").on("click", 'a', function() {
 			let who = $(this).data("who");
 			$.ajax({
-				url : "<%=request.getContextPath() %>/member/memberView.do",
+				url : "${pageContext.request.contextPath}/member/memberView.do",
 				data : {
 					who:who
 				},
@@ -89,11 +87,7 @@
 </script>
 </head>
 <body>
-	<%
-	PagingVO<MemberVO> pagingVO = (PagingVO<MemberVO>) request.getAttribute("pagingVO");
-	
-	%>
-	<form id="memberListForm" action="<%= request.getContextPath() %>/member/memberList.do" method="get">
+	<form id="memberListForm" action="${pageContext.request.contextPath}/member/memberList.do" method="get">
 		<input type="hidden" name="page">
 		<select name = "searchType">
 			<option value="all">전체</option>
@@ -128,27 +122,24 @@
 		</tr>
 		</thead>
 		<tbody>
-			<%
-			List<MemberVO> list = pagingVO.getData();
-			if(list != null && list.size() > 0){
-				for(MemberVO member : list){
-					%>
-					<%= member.getMemberInfo() %>
-					<%
-				}
-			}else{
-				%>
+		<c:set var="list" value="${pagingVO.data }" />
+		<c:choose>
+			<c:when test="${not empty list }">
+				<c:forEach var="member" items="${list }" >
+					${member.memberInfo }
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
 				<tr>
 					<td colspan='18'>검색 조건에 맞는 회원이 없음.</td>
 				</tr>
-				<%
-			}
+			</c:otherwise>
+		</c:choose>
 			
-			%>
 		</tbody>
 	</table>
 	<div id="pagingArea">
-	  <%= pagingVO.getPagingHTML_BS() %>
+	  ${pagingVO.pagingHTML_BS}
 	</div>
 
 <div class="modal fade" id="memberViewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
