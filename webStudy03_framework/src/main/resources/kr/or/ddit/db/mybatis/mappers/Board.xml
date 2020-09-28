@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.board.dao.IBoardDAO">
+
+	<sql id="searchFrag">
+		<where>
+			<if test="searchVO neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.searchType)">
+				<choose>
+					<when test="'title' eq searchVO.searchType">
+							BO_TITLE LIKE '%' || #{searchVO.searchWord} ||'%'
+					</when>
+					<when test="'content' eq searchVO.searchType">
+							BO_CONTENT LIKE '%' || #{searchVO.searchWord} ||'%'
+					</when>
+					<when test="'writer' eq searchVO.searchType">
+							BO_WRITER LIKE '%' || #{searchVO.searchWord} ||'%'
+					</when>
+					<when test="'all' eq searchVO.searchType and @org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.searchWord)">
+						INSTR(BO_TITLE, #{searchVO.searchWord}) > 0
+						OR
+						INSTR(BO_CONTENT, #{searchVO.searchWord}) > 0
+						OR
+						INSTR(BO_WRITER, #{searchVO.searchWord}) > 0
+					</when>
+				</choose>
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="selectBoardList" parameterType="PagingVO" resultType="BoardVO">
+		
+		SELECT B.*
+		FROM (
+			SELECT
+				ROWNUM RNUM, A.*
+			FROM(    
+				SELECT    
+					BO_NO,		    BO_TITLE,		    BO_WRITER,
+				    BO_DATE,		    BO_CONTENT,		    BO_PASS,
+				    BO_IP,		    BO_HIT,		    BO_PARENT
+				FROM
+				    BOARD
+				<include refid="searchFrag" />
+				ORDER BY BO_DATE DESC
+			) A
+		) B
+		<![CDATA[
+			WHERE RNUM >=${startRow} AND RNUM <=#{endRow}
+		]]>
+	</select>
+	
+	<select id="selectBoardCount" resultType="int">
+		
+		SELECT COUNT(*) FROM BOARD
+		<include refid="searchFrag" />
+	</select>
+	
+	
+	<resultMap type="BoardVO" id="boardMap" autoMapping="true">
+		<id property="bo_no" column="BONO"/>
+		<collection property="replyList" ofType="ReplyVO" autoMapping="true"></collection>
+		<collection property="attatchList" ofType="AttachVO" autoMapping="true"></collection>
+	</resultMap>
+	<select id="selectBoard" parameterType="int" resultMap="boardMap">
+	
+		WITH BOARDVIEW AS(
+	    SELECT
+	        board.bo_no bono,        bo_title,        bo_writer,
+	        bo_date,        bo_content,        bo_pass,
+	        bo_ip,        bo_hit,        bo_parent,
+	        rep_no,    rep_content,    rep_writer,
+	        rep_date,    rep_ip,    rep_pass
+	    FROM
+	        board LEFT OUTER JOIN (SELECT DISTINCT
+	                    rep_no,    bo_no,    rep_content,    rep_writer,
+	                    rep_date,    rep_ip,    rep_pass    FROM    replyjsp) replyjsp
+	                    ON (board.bo_no = replyjsp.bo_no)
+		)
+		SELECT BOARDVIEW.*, ATT_NO,    ATT_FILENAME,    ATT_SAVENAME,    ATT_MIME,
+    						ATT_FILESIZE,    ATT_FANCYSIZE,    ATT_DOWNCOUNT
+		FROM BOARDVIEW LEFT outer join (SELECT DISTINCT * FROM attatch) attatch on(BOARDVIEW.bono = attatch.BO_NO)
+		WHERE BOARDVIEW.bono = ${bo_no}
+	
+	</select>
+	
+	<update id="incrementHit" parameterType="int">
+		
+		UPDATE BOARD SET
+    	BO_HIT = BO_HIT+1
+		WHERE BO_NO = ${bo_no}
+	
+	</update>
+	
+</mapper>
