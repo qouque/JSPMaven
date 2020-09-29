@@ -27,5 +27,49 @@
 		WHERE BO_NO = ${searchData.bo_no}
 		
 	</select>
-
+	<insert id="insertReply" parameterType="ReplyVO">
+		<selectKey keyProperty="rep_no" order="BEFORE" resultType="int" >
+			SELECT MAX(rep_no)+1
+			FROM REPLYJSP
+		</selectKey>
+		INSERT INTO replyjsp (
+		    rep_no,    bo_no,    rep_content,
+		    rep_writer,    rep_date,    rep_ip,
+		    rep_pass
+		) VALUES (
+		   #{rep_no,jdbcType=NUMERIC}, #{bo_no,jdbcType=NUMERIC}, #{rep_content,jdbcType=VARCHAR},
+		   #{rep_writer,jdbcType=VARCHAR},    SYSDATE,    #{rep_ip,jdbcType=VARCHAR},
+		    #{rep_pass,jdbcType=VARCHAR}
+		)
+	
+	</insert>
+	<delete id="deleteReply" parameterType="int">
+		DELETE FROM replyjsp
+		WHERE
+		    rep_no = #{rep_no}
+		    
+	</delete>
+	<update id="updateReply" parameterType="ReplyVO">
+		
+		UPDATE replyjsp
+    	SET
+	       rep_content = b
+	       rep_writer = b
+		WHERE
+		    rep_no =:v0
+	
+	</update>
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,4 +9,4 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/messages_ko.min.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/datatables.min.js"></script>
-
+<script src="http://malsup.github.com/jquery.form.js"></script>

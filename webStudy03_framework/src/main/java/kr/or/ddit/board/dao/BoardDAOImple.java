@@ -27,6 +27,11 @@ public class BoardDAOImple implements IBoardDAO {
 	}
 	
 	@Override
+	public int insertBoard(BoardVO board, SqlSession session) {
+		return session.insert("kr.or.ddit.board.dao.IBoardDAO.insertBoard", board);
+	}
+	
+	@Override
 	public BoardVO selectBoard(int bo_no) {
 		try(
 			SqlSession session = sqlSessionFactory.openSession();	

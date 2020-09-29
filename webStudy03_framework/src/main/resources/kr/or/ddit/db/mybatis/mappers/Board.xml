@@ -27,6 +27,21 @@
 		</where>
 	</sql>
 	
+	<insert id="insertBoard" parameterType="BoardVO">
+		<selectKey resultType="int" keyProperty="bo_no" order="BEFORE">
+			SELECT MAX(BO_NO)+1
+			FROM BOARD
+		</selectKey>
+		INSERT INTO board (
+		    bo_no,    bo_title,    bo_writer,
+		    bo_date,    bo_content,    bo_pass,
+		    bo_ip,    bo_hit
+		) VALUES (
+		  	#{bo_no,jdbcType=NUMERIC},    #{bo_title,jdbcType=VARCHAR},    #{bo_writer,jdbcType=VARCHAR},
+		    SYSDATE,    #{bo_content,jdbcType=VARCHAR},    #{bo_pass,jdbcType=VARCHAR},
+		    #{bo_ip,jdbcType=VARCHAR},   0
+		)
+	</insert>
 	
 	<select id="selectBoardList" parameterType="PagingVO" resultType="BoardVO">
 		
@@ -46,7 +61,7 @@
 			) A
 		) B
 		<![CDATA[
-			WHERE RNUM >=${startRow} AND RNUM <=#{endRow}
+			WHERE RNUM >=#{startRow} AND RNUM <=#{endRow}
 		]]>
 	</select>
 	
@@ -80,7 +95,7 @@
 		SELECT BOARDVIEW.*, ATT_NO,    ATT_FILENAME,    ATT_SAVENAME,    ATT_MIME,
     						ATT_FILESIZE,    ATT_FANCYSIZE,    ATT_DOWNCOUNT
 		FROM BOARDVIEW LEFT outer join (SELECT DISTINCT * FROM attatch) attatch on(BOARDVIEW.bono = attatch.BO_NO)
-		WHERE BOARDVIEW.bono = ${bo_no}
+		WHERE BOARDVIEW.bono = #{bo_no}
 	
 	</select>
 	
@@ -88,7 +103,7 @@
 		
 		UPDATE BOARD SET
     	BO_HIT = BO_HIT+1
-		WHERE BO_NO = ${bo_no}
+		WHERE BO_NO = #{bo_no}
 	
 	</update>
 	

@@ -19,5 +19,7 @@ public interface IBoardDAO {
 	
 	public int incrementHit(int bo_no, SqlSession session);
 	
+	public int insertBoard(BoardVO board, SqlSession session);
+	
 	
 }

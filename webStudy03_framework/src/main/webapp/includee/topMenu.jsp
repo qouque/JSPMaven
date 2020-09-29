@@ -4,6 +4,6 @@
 	<li><a href="${pageContext.request.contextPath}/member/memberList.do">회원관리</a></li>
 	<li><a href="${pageContext.request.contextPath}/prod/prodList.do">상품관리</a></li>
 	<li>거래처관리</li>
-	<li>게시판</li>
+	<li><a href="${pageContext.request.contextPath}/board/boardList.do">게시판</a></li>
 	<li>방명록</li>
 </ul>

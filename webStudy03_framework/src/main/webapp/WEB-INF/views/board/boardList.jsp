@@ -112,7 +112,7 @@
 	</table>
 	<div id="pagingArea">
 		${pagingVO.pagingHTML_BS }
-		
+		<input type="button" value="게시글 작성" onclick="location.href = '${pageContext.request.contextPath }/board/boardInsert.do'">
 	</div>
 	<form id="boardListForm" action="${pageContext.request.contextPath }/board/boardList.do" method="get">
 		<input type="hidden" name="page" />
