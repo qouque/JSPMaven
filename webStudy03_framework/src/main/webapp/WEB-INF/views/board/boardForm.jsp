@@ -60,7 +60,12 @@
 		</table>
 	</form>
 	<script>
-		CKEDITOR.replace( 'bo_content' );
+		CKEDITOR.replace( 'bo_content', {
+			filebrowserImageUploadUrl : "${pageContext.request.contextPath}/board/imageUpload.do",
+			height: 500,
+			resize_enabled : false,
+			uiColor: '#ECC1FF'
+		} );
 	</script>
 </body>
 </html>
